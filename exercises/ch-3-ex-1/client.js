@@ -43,15 +43,21 @@ app.get("/", function (req, res) {
 });
 
 app.get("/authorize", function (req, res) {
+    state = randomstring.generate();
     var authorizeUrl = buildUrl(authServer.authorizationEndpoint, {
         response_type: "code",
         client_id: client.client_id,
         redirect_uri: client.redirect_uris[0],
+        state: state,
     });
     res.redirect(authorizeUrl);
 });
 
 app.get("/callback", function (req, res) {
+    if (req.query.state !== state) {
+        res.render("error", { error: "Started value did not match" });
+        return;
+    }
     var code = req.query.code;
     var form_data = qs.stringify({
         grant_type: "authorization_code",

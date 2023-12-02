@@ -180,7 +180,9 @@ var refreshAccessToken = function (req, res) {
         }
         scope = body.scope;
         res.redirect("./fetch_resource");
-        return;
+    } else {
+        refresh_token = null;
+        res.render("error", { error: "Unable to refresh token" });
     }
 };
 

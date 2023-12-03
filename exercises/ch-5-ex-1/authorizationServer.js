@@ -26,9 +26,11 @@ var authServer = {
 
 // client information
 var clients = [
-    /*
-     * Enter client information here
-     */
+    {
+        client_id: "oauth-client-1",
+        client_secret: "oauth-client-secret-1",
+        redirect_uris: ["http://localhost:9000/callback"],
+    },
 ];
 
 var codes = {};
@@ -46,9 +48,18 @@ app.get("/", function (req, res) {
 });
 
 app.get("/authorize", function (req, res) {
-    /*
-     * Process the request, validate the client, and send the user to the approval page
-     */
+    var client = getClient(req.query.client_id);
+    if (!client) {
+        res.render("error", { error: "Unknown client" });
+        return;
+    } else if (!__.contains(client.redirect_uris, req.query.redirect_uri)) {
+        res.render("error", { error: "Invalid redirect URI" });
+        return;
+    } else {
+        var reqid = randomstring.generate(8);
+        requests[reqid] = req.query;
+        res.render("approve", { client: client, reqid: reqid });
+    }
 });
 
 app.post("/approve", function (req, res) {

@@ -72,6 +72,10 @@ app.get("/produce", getAccessToken, requireAccessToken, function (req, res) {
     if (__.contains(req.access_token.scope, "meats")) {
         produce.meats = ["bacon", "steak", "chicken breast"];
     }
+    if (__.contains(req.access_token.scope, "lowcarb")) {
+        produce.fruit = ["apple", "banana", "kiwi"];
+        produce.veggies = ["lettuce", "onion"];
+    }
     res.json(produce);
 });
 

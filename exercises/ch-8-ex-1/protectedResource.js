@@ -85,6 +85,8 @@ var requireAccessToken = function (req, res, next) {
 
 app.get("/helloWorld", getAccessToken, function (req, res) {
     if (req.access_token) {
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        res.setHeader("X-XSS-protection", "1; mode=block");
         let resource = {
             greeting: "",
         };
